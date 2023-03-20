@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bibliothèque</title>
+</head>
+<body>
+  <h1>Gestion de la bibliothèque</h1>
+
+  <div id="livres"></div>
+  <div id="membres"></div>
+
+  <script>
+
+
+class Livre {
+  constructor(titre, auteur, isbn) {
+    this.titre = titre;
+    this.auteur = auteur;
+    this.isbn = isbn;
+    this.disponible = true;
+  }
+
+  emprunter() {
+    if (this.disponible) {
+      this.disponible = false;
+      console.log(`${this.titre} a été emprunté.`);
+    } else {
+      console.log(`${this.titre} n'est pas disponible.`);
+    }
+  }
+
+  retourner() {
+    this.disponible = true;
+    console.log(`${this.titre} a été retourné.`);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+class Membre {
+  constructor(nom, email) {
+    this.nom = nom;
+    this.email = email;
+    this.livresEmpruntes = [];
+  }
+
+  emprunterLivre(livre) {
+    if (livre.disponible) {
+      livre.emprunter();
+      this.livresEmpruntes.push(livre);
+    }
+  }
+
+  retournerLivre(livre) {
+    livre.retourner();
+    this.livresEmpruntes = this.livresEmpruntes.filter((l) => l !== livre);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+class Etudiant extends Membre {
+  constructor(nom, email, matricule) {
+    super(nom, email);
+    this.matricule = matricule;
+  }
+}
+
+class Enseignant extends Membre {
+  constructor(nom, email, departement) {
+    super(nom, email);
+    this.departement = departement;
+  }
+}
+
+
+    // Classes Livre, Membre, Etudiant et Enseignant définies ici (voir exemple précédent)
+
+    const livre1 = new Livre("1984", "George Orwell", "123456789");
+    const livre2 = new Livre("Le Meilleur des mondes", "Aldous Huxley", "987654321");
+
+    const etudiant = new Etudiant("Alice", "alice@example.com", "S123456");
+    const enseignant = new Enseignant("Bob", "bob@example.com", "Sciences");
+
+    const livres = [livre1, livre2];
+    const membres = [etudiant, enseignant];
+
+    function afficherLivres() {
+      const livresDiv = document.getElementById("livres");
+      livresDiv.innerHTML = "<h2>Livres</h2>";
+
+      livres.forEach((livre) => {
+        const livreDiv = document.createElement("div");
+        livreDiv.innerHTML = `
+          <p><strong>Titre:</strong> ${livre.titre}</p>
+          <p><strong>Auteur:</strong> ${livre.auteur}</p>
+          <p><strong>ISBN:</strong> ${livre.isbn}</p>
+          <p><strong>Disponible:</strong> ${livre.disponible ? "Oui" : "Non"}</p>
+        `;
+        livresDiv.appendChild(livreDiv);
+      });
+    }
+
+    function afficherMembres() {
+      const membresDiv = document.getElementById("membres");
+      membresDiv.innerHTML = "<h2>Membres</h2>";
+
+      membres.forEach((membre) => {
+        const membreDiv = document.createElement("div");
+        membreDiv.innerHTML = `
+          <p><strong>Nom:</strong> ${membre.nom}</p>
+          <p><strong>Email:</strong> ${membre.email}</p>
+          <p><strong>Livres empruntés:</strong> ${membre.livresEmpruntes.map(livre => livre.titre).join(", ") || "Aucun"}</p>
+        `;
+        membresDiv.appendChild(membreDiv);
+      });
+    }
+
+    // Affichage initial des livres et membres
+    afficherLivres();
+    afficherMembres();
+
+    // Exemple d'emprunt et de retour de livres
+    etudiant.emprunterLivre(livre1);
+    enseignant.emprunterLivre(livre1);
+    etudiant.retournerLivre(livre1);
+    enseignant.emprunterLivre(livre1);
+
+    // Mise à jour de l'affichage des livres et membres
+    afficherLivres();
+    afficherMembres();
+  </script>
+</body>
+</html>
